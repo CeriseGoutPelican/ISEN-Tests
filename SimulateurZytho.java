@@ -22,27 +22,27 @@ public class SimulateurZytho {
     /**
      * Génération de l'interface d'accueil
      */
-    private Interface interfaceAccueil;
+    private static Interface ACCUEIL;
     
     /**
      * Génération de l'interface de gestion des stocks
      */
-    private Interface interfaceStocks;
+    private static Interface STOCKS;
     
     /**
      * Génération de l'interface de la gestion des comptes en banque
      */
-    private Interface interfaceComptes;
+    private static Interface COMPTES;
     
     /**
      * Génération de l'interface de la gestion du personnel (barman, serveur, patron)
      */
-    private Interface interfacePersonnel;
+    private static Interface PERSONNEL;
     
     /**
      * Génération de l'interface contenant la liste des clients et de sa gestion
      */
-    private Interface interfaceClients;
+    private static Interface CLIENTS;    
     
     /**
      * METHODE MAIN
@@ -62,34 +62,28 @@ public class SimulateurZytho {
      * ============
      * @since 1.0
      */
-    public static void main(String[] args) {      
+    public static void main(String[] args) {
+        
+        // Génération des interfaces
+        makeInterface();
+        
         // Affichage de l'écran d'accueil
         Integer[] statistiques = {20, 2500, 52, 6, 20};
         AffichageGraphique.affichageInterface(
-                interfaceAccueil,
-                statistiques, 
-                "planZytho");
+                ACCUEIL,
+                statistiques);
         
     }
     
     /**
-     * CONSTRUCTEUR MAKE_INTERFACE
-     * ===========================
+     * METHODE MAKE_INTERFACE
+     * ======================
      * Cette méthode permet de générer les différentes interfaces puis de les 
      * liers avec un lien en arbre parents-enfants
      * 
      * ENTREES
      * =======
-     * @param interfaceAccueil 
-     *          Interface de l'accueil
-     * @param interfaceStocks 
-     *          Interface de la gestion des stocks
-     * @param interfaceComptes
-     *          Interface de la gestion des comptes en banque
-     * @param interfacePersonnel 
-     *          Interface de la gestion du personnel
-     * @param interfaceClients 
-     *          Interface de la gestion des clients
+     * Aucune entrée
      * 
      * SORTIES
      * =======
@@ -99,14 +93,18 @@ public class SimulateurZytho {
      * ============
      * @since 1.0
      */
-    public SimulateurZytho(Interface interfaceAccueil, Interface interfaceStocks, Interface interfaceComptes, Interface interfacePersonnel, Interface interfaceClients){
-        this.interfaceAccueil   = new Interface("Accueil du Zytho", 'R', "Retourner à l'accueil", null, null);
-        this.interfaceStocks    = new Interface("Affichage des stocks", 'S', "Stocks", interfaceAccueil, null);
-        this.interfaceComptes   = new Interface("Affichage du compte en banque", 'C', "Comptes", interfaceAccueil, null);
-        this.interfacePersonnel = new Interface("Gestion du personnel", 'G', "Gestion personnel", interfaceAccueil, null);
-        this.interfaceClients   = new Interface("Gestion des clients présents dans le bar", 'L', "Liste clients", interfaceAccueil, null);
+    public static void makeInterface(){
+        ACCUEIL   = new Interface("Accueil du Zytho", 'R', "Retourner à l'accueil", "planZytho", null, null);
+        STOCKS    = new Interface("Affichage des stocks", 'S', "Stocks", null, ACCUEIL, null);
+        COMPTES   = new Interface("Affichage du compte en banque", 'C', "Comptes", null, ACCUEIL, null);
+        PERSONNEL = new Interface("Gestion du personnel", 'G', "Gestion personnel", null, ACCUEIL, null);
+        CLIENTS   = new Interface("Gestion des clients présents dans le bar", 'L', "Liste clients", null, ACCUEIL, null);
         
-        interfaceAccueil.setEnfants(new Interface[]{interfaceStocks, interfaceComptes, interfacePersonnel, interfaceClients});
+        ACCUEIL.setEnfants(new Interface[]{STOCKS, COMPTES, PERSONNEL, CLIENTS});
+        STOCKS.setEnfants(new Interface[]{ACCUEIL});
+        COMPTES.setEnfants(new Interface[]{ACCUEIL});
+        PERSONNEL.setEnfants(new Interface[]{ACCUEIL});
+        CLIENTS.setEnfants(new Interface[]{ACCUEIL});
     }  
     
 }

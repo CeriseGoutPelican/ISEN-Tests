@@ -19,19 +19,30 @@ package simulateurzytho;
  */
 public class SimulateurZytho {
     
-    // DEFINITIONS DES VARIABLES DU JEU
-    // INTERFACES
+    /**
+     * Génération de l'interface d'accueil
+     */
+    private Interface interfaceAccueil;
     
     /**
-     * Interface d'accueil
-     */    
-    private static Interface ACCUEIL   = new Interface("Accueil du Zytho", 'R', "Retourner à l'accueil", null, null);
-    private static Interface STOCKS    = new Interface("Affichage des stocks", 'S', "Stocks", ACCUEIL, null);
-    private static Interface COMPTES   = new Interface("Affichage du compte en banque", 'C', "Comptes", ACCUEIL, null);
-    private static Interface PERSONNEL = new Interface("Gestion du personnel", 'G', "Gestion personnel", ACCUEIL, null);
-    private static Interface CLIENTS   = new Interface("Gestion des clients présents dans le bar", 'L', "Liste clients", ACCUEIL, null);
+     * Génération de l'interface de gestion des stocks
+     */
+    private Interface interfaceStocks;
     
-    ACCUEIL.setEnfants(STOCKS);
+    /**
+     * Génération de l'interface de la gestion des comptes en banque
+     */
+    private Interface interfaceComptes;
+    
+    /**
+     * Génération de l'interface de la gestion du personnel (barman, serveur, patron)
+     */
+    private Interface interfacePersonnel;
+    
+    /**
+     * Génération de l'interface contenant la liste des clients et de sa gestion
+     */
+    private Interface interfaceClients;
     
     /**
      * METHODE MAIN
@@ -51,15 +62,51 @@ public class SimulateurZytho {
      * ============
      * @since 1.0
      */
-    public static void main(String[] args) {
-        
-        // ETAPE 1 : affichage de l'écran d'accueil
+    public static void main(String[] args) {      
+        // Affichage de l'écran d'accueil
         Integer[] statistiques = {20, 2500, 52, 6, 20};
         AffichageGraphique.affichageInterface(
-                ACCUEIL,
+                interfaceAccueil,
                 statistiques, 
                 "planZytho");
         
     }
+    
+    /**
+     * CONSTRUCTEUR MAKE_INTERFACE
+     * ===========================
+     * Cette méthode permet de générer les différentes interfaces puis de les 
+     * liers avec un lien en arbre parents-enfants
+     * 
+     * ENTREES
+     * =======
+     * @param interfaceAccueil 
+     *          Interface de l'accueil
+     * @param interfaceStocks 
+     *          Interface de la gestion des stocks
+     * @param interfaceComptes
+     *          Interface de la gestion des comptes en banque
+     * @param interfacePersonnel 
+     *          Interface de la gestion du personnel
+     * @param interfaceClients 
+     *          Interface de la gestion des clients
+     * 
+     * SORTIES
+     * =======
+     * Aucune
+     * 
+     * INFORMATIONS
+     * ============
+     * @since 1.0
+     */
+    public SimulateurZytho(Interface interfaceAccueil, Interface interfaceStocks, Interface interfaceComptes, Interface interfacePersonnel, Interface interfaceClients){
+        this.interfaceAccueil   = new Interface("Accueil du Zytho", 'R', "Retourner à l'accueil", null, null);
+        this.interfaceStocks    = new Interface("Affichage des stocks", 'S', "Stocks", interfaceAccueil, null);
+        this.interfaceComptes   = new Interface("Affichage du compte en banque", 'C', "Comptes", interfaceAccueil, null);
+        this.interfacePersonnel = new Interface("Gestion du personnel", 'G', "Gestion personnel", interfaceAccueil, null);
+        this.interfaceClients   = new Interface("Gestion des clients présents dans le bar", 'L', "Liste clients", interfaceAccueil, null);
+        
+        interfaceAccueil.setEnfants(new Interface[]{interfaceStocks, interfaceComptes, interfacePersonnel, interfaceClients});
+    }  
     
 }

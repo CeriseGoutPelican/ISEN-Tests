@@ -1,7 +1,9 @@
 package simulateurzytho;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import sun.reflect.annotation.AnnotationParser;
 
 /**
  * CLASSE INTERFACE
@@ -37,6 +39,11 @@ public class Interface{
     private final String legende;
     
     /**
+     * Petite phrase d'instruction pour l'affichage de la navigation
+     */
+    private final String asciiART;
+    
+    /**
      * Interface parent (retour en arrière) 
      */
     private final Interface parent;
@@ -44,7 +51,7 @@ public class Interface{
     /**
      * Liste des interfaces enfants (avancer dans la navigation)
      */
-    private List<Interface> enfants = new ArrayList<>();
+    private final List<Interface> enfants;
 
     /**
      * CONSTRUCTEUR INTERFACE
@@ -59,6 +66,8 @@ public class Interface{
      *          Raccourcis pour accéder à l'interface : lettre entrée par l'utilisateur
      * @param legende
      *          Petite phrase d'instruction pour l'affichage de la navigation
+     * @param asciiART 
+     *          Nom du fichier .asciiART à afficher, mettre null s'il ne faut rien afficher
      * @param parent
      *          Interface parent (retour en arrière) 
      * @param enfants 
@@ -72,12 +81,13 @@ public class Interface{
      * ============
      * @since 1.0
      */
-    public Interface(String nom, char raccourcis, String legende, Interface parent, List<Interface> enfants){
+    public Interface(String nom, char raccourcis, String legende, String asciiART, Interface parent, List<Interface> enfants){
         this.nom = nom;
         this.raccourcis = raccourcis;
         this.legende = legende;
+        this.asciiART = asciiART;
         this.parent = parent;
-        this.enfants = enfants;
+        this.enfants = enfants = new ArrayList<>();
     }
 
     /**
@@ -143,6 +153,27 @@ public class Interface{
     public String getLegende(){
         return legende;
     }
+        
+    /**
+     * ASSESSEUR GET_ASCII_ART
+     * =======================
+     * Retourne l'interface Ascii Art
+     * 
+     * ENTREES
+     * =======
+     * Aucune entrée
+     * 
+     * SORTIES
+     * =======
+     * @return chemin du fichier .asciiART 
+     * 
+     * INFORMATIONS
+     * ============
+     * @since 1.0
+     */    
+    public String getAsciiArt(){
+        return asciiART;
+    }
     
     /**
      * ASSESSEUR GET_ENFANTS
@@ -162,15 +193,8 @@ public class Interface{
      * ============
      * @since 1.0
      */    
-    public String getEnfants(){
-        
-        String output = "";
-        
-        for (Interface tmp : enfants) {
-            output += "[" + tmp.getRaccourcis() + "] " + tmp.getLegende() + " ";
-        }
-        
-        return output;
+    public Interface[] getEnfants(){
+        return enfants.toArray(new Interface[enfants.size()]);
     }
     
     /**
@@ -194,6 +218,7 @@ public class Interface{
     public void setEnfants(Interface nouvelEnfant){
         this.enfants.add(nouvelEnfant);
     }
+    
     /**
      * MUTATEUR SET_ENFANTS
      * ====================
@@ -214,8 +239,70 @@ public class Interface{
      * ============
      * @since 1.0
      */
-    public void setEnfants(List<Interface> nouveauxEnfants){
-        this.enfants.addAll(nouveauxEnfants);
+    public void setEnfants(Interface[] nouveauxEnfants){
+        this.enfants.addAll(Arrays.asList(nouveauxEnfants));
+    }
+    
+    /**
+     * METHODE DISPLAY_ENFANTS
+     * =======================
+     * Retourne l'intégralité de la navigation (les enfants) sous forme 
+     * d'un string déjà formaté
+     * 
+     * ENTREES
+     * =======
+     * Aucune entrée
+     * 
+     * SORTIES
+     * =======
+     * @return nom Un string formaté des enfants pour la navifation "[raccourcis] Légende [rac..."
+     * 
+     * INFORMATIONS
+     * ============
+     * @since 1.0
+     */    
+    public String displayEnfants(){
+        
+        String output = "";
+        
+        for (Interface tmp : enfants) {
+            output += "[" + tmp.getRaccourcis() + "] " + tmp.getLegende() + " ";
+        }
+        
+        return output;
+    }    
+    
+    /**
+     * METHODE TROUVER_INTERFACE
+     * =========================
+     * Permet de trouver la bonne interface que l'utilisateur demande avec 
+     * le racourcis clavier 
+     * 
+     * ENTREES
+     * =======
+     * @param interfaces
+     *          Liste des interfaces enfants dans lesquels rechercher
+     * @param recherche
+     *          Caractère ascii de référence à rechercher
+     * 
+     * SORTIES
+     * =======
+     * @return l'interface demandée
+
+     * INFORMATIONS
+     * ============
+     * @since 1.0
+     */
+    public static Interface trouverInterface(Interface[] interfaces, String recherche){
+        
+        // Recherche l'interface demandée
+        int i =0;for (Interface aInterface : interfaces) {
+            if(String.valueOf(aInterface.getRaccourcis()).equals(recherche)){
+                return interfaces[i];
+            }
+        i++;}
+        
+        return null;
     }
 
 }
